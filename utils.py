@@ -23,7 +23,16 @@ def get_targets_array(line: str) -> NDArray[float64]:
     targets[int(line[0])] = 0.99
     return targets
 
-def get_index_of_max_value_in_array(array: NDArray[float64]) -> int:
-    max_val = numpy.max(array)
-    index = numpy.where(array == max_val)[0][0]
-    return index
+def plot_ascii(image_data:NDArray[float64], width: int=28, height: int=28):
+    """Convert image data to ASCII art"""
+    # ASCII characters from darkest to lightest
+    ascii_chars = "@%#*+=-:. "
+    
+    # Reshape and normalize to 0-1 range if not already
+    pixels = image_data.reshape((height, width))
+    pixels = (pixels - pixels.min()) / (pixels.max() - pixels.min())
+    
+    # Convert to ASCII
+    for row in pixels:
+        line = "".join([ascii_chars[min(int(p * len(ascii_chars)), len(ascii_chars)-1)] for p in row])
+        print(line)
